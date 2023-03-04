@@ -1,66 +1,91 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import React, {createContext, useEffect, useState} from 'react';
-import {BASE_URL} from '../config';
+import React, { createContext, useEffect, useState } from 'react';
+import { BASE_URL } from '../config';
 
 export const AuthContext = createContext();
 
-export const AuthProvider = ({children}) => {
+export const AuthProvider = ({ children }) => {
   const [userInfo, setUserInfo] = useState({});
+  const [responseMessage, setResponseMessage] = useState(null);
+  const [statusInfo, setStatusInfo] = useState({});
+
+  const [isLogin, setIsLogin] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [splashLoading, setSplashLoading] = useState(false);
-  const [responseMessage, setResponseMessage] = useState(null);
-
-  const register = (name, email, password) => {
+  
+  const login = (email, password) => {
     setIsLoading(true);
-
     axios
-      .post(`${BASE_URL}/register`, {
-        name,
+      .post(`${BASE_URL}/mobile-login-api`, {
         email,
         password,
       })
       .then(res => {
         let userInfo = res.data;
-        setUserInfo(userInfo);
-        AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
-        setIsLoading(false);
-        console.log(userInfo);
-      })
-      .catch(e => {
-        console.log(`register error ${e}`);
-        setIsLoading(false);
-      });
-  };
-
-  const login = (email, password) => {
-    setIsLoading(true);
-    axios
-    .post(`https://ngi.axionpcs.in/api/cs/mobile-login-api`, {
-      email,
-      password,
-    })
-    .then(res => {
-        let userInfo = res.data;
         let message = res.data.message;
         console.log(userInfo);
         setUserInfo(userInfo);
+        setIsLogin(true);
         setResponseMessage(message);
         AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
         setIsLoading(false);
       })
       .catch(e => {
-        console.log(`login error ${e}`);
+        console.log(`check auth error ${e}`);
         setIsLoading(false);
       });
+  };
+
+  const getClaimStatus = () => {
+      let id = userInfo.data.res.id;
+      axios
+        .post(`${BASE_URL}/get-claim-status`, {
+          id,
+        })
+        .then(res => {
+          let response = res.data;
+          console.log(response);
+          setStatusInfo(response);
+          setResponseMessage(message);
+          AsyncStorage.setItem('statusInfo', JSON.stringify(response));
+          setIsLoading(false);
+        })
+        .catch(e => {
+          console.log(`get status error ${e}`);
+        });
+  };
+
+  const AuthChecking = () => {
+    if (!isEmpty(userInfo)) {
+      let token = userInfo.token;
+      setIsLoading(true);
+      // axios
+      //   .post(`${BASE_URL}/mobile-login-api`, {
+      //     token,
+      //   })
+      //   .then(res => {
+      //     let userInfo = res.data;
+      //     let message = res.data.message;
+      //     console.log(userInfo);
+      //     setUserInfo(userInfo);
+      //     setResponseMessage(message);
+      //     AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
+      //     setIsLoading(false);
+      //   })
+      //   .catch(e => {
+      //     console.log(`login error ${e}`);
+      //     setIsLoading(false);
+      //   });
+    }
   };
 
   const logout = () => {
     setIsLoading(true);
     AsyncStorage.removeItem('userInfo');
-        setUserInfo({});
-        setResponseMessage('');
-        setIsLoading(false);
+    setUserInfo({});
+    setResponseMessage('');
+    setIsLoading(false);
 
     // axios
     //   .post(
@@ -111,9 +136,10 @@ export const AuthProvider = ({children}) => {
         userInfo,
         responseMessage,
         splashLoading,
-        register,
         login,
+        getClaimStatus,
         logout,
+        statusInfo,
       }}>
       {children}
     </AuthContext.Provider>

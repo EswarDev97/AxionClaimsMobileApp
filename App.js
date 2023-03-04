@@ -3,14 +3,19 @@ import { Text, View } from "react-native";
 import Navigation from "./src/components/Navigation";
 import { AuthProvider } from "./src/context/AuthContext";
 import { NativeBaseProvider } from 'native-base';
-
+import { ApplicationProvider, IconRegistry } from '@ui-kitten/components';
+import * as eva from '@eva-design/eva';
 
 const App = () => {
-    return(
+    return (
         <AuthProvider>
-            <NativeBaseProvider>
-                <Navigation/>
-            </NativeBaseProvider>
+            <ApplicationProvider
+                {...eva} theme={eva.light}>
+
+                <NativeBaseProvider>
+                    <Navigation />
+                </NativeBaseProvider>
+            </ApplicationProvider>
         </AuthProvider>
     )
 }
