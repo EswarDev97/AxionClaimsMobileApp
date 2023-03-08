@@ -1,1 +1,1 @@
-export const BASE_URL = 'https://ngi.axionpcs.in/api/cs';
+export const BASE_URL = 'https://nia.axionpcs.in/api/cs';

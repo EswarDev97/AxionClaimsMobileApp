@@ -9,11 +9,12 @@ export const AuthProvider = ({ children }) => {
   const [userInfo, setUserInfo] = useState({});
   const [responseMessage, setResponseMessage] = useState(null);
   const [statusInfo, setStatusInfo] = useState({});
+  const [claimsInfo, setClaimsInfo] = useState({});
 
   const [isLogin, setIsLogin] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [splashLoading, setSplashLoading] = useState(false);
-  
+
   const login = (email, password) => {
     setIsLoading(true);
     axios
@@ -27,7 +28,6 @@ export const AuthProvider = ({ children }) => {
         console.log(userInfo);
         setUserInfo(userInfo);
         setIsLogin(true);
-        setResponseMessage(message);
         AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
         setIsLoading(false);
       })
@@ -37,74 +37,63 @@ export const AuthProvider = ({ children }) => {
       });
   };
 
-  const getClaimStatus = () => {
-      let id = userInfo.data.res.id;
+  const getClaimStatus = (mobile) => {
+    console.log(mobile);
+    axios
+      .post(`${BASE_URL}/get-claim-status`, {
+        mobile
+      })
+      .then(res => {
+        let response = res.data.data[0].status;
+        console.log(response);
+        setStatusInfo(response);
+        AsyncStorage.setItem('statusInfo', JSON.stringify(response));
+        setIsLoading(false);
+      })
+      .catch(e => {
+        console.log(`get status error ${e}`);
+      });
+  };
+
+  const getClaimList = (mobile) => {
+    console.log(mobile);
       axios
-        .post(`${BASE_URL}/get-claim-status`, {
-          id,
+        .post(`${BASE_URL}/get-claims-list`, {
+          mobile
         })
         .then(res => {
           let response = res.data;
           console.log(response);
-          setStatusInfo(response);
+          setClaimsInfo(response);
           setResponseMessage(message);
-          AsyncStorage.setItem('statusInfo', JSON.stringify(response));
+          AsyncStorage.setItem('ClaimsInfo', JSON.stringify(response));
           setIsLoading(false);
         })
         .catch(e => {
           console.log(`get status error ${e}`);
         });
-  };
+  }
 
   const AuthChecking = () => {
     if (!isEmpty(userInfo)) {
       let token = userInfo.token;
       setIsLoading(true);
-      // axios
-      //   .post(`${BASE_URL}/mobile-login-api`, {
-      //     token,
-      //   })
-      //   .then(res => {
-      //     let userInfo = res.data;
-      //     let message = res.data.message;
-      //     console.log(userInfo);
-      //     setUserInfo(userInfo);
-      //     setResponseMessage(message);
-      //     AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
-      //     setIsLoading(false);
-      //   })
-      //   .catch(e => {
-      //     console.log(`login error ${e}`);
-      //     setIsLoading(false);
-      //   });
+      
     }
   };
 
   const logout = () => {
+    console.log('logout');
     setIsLoading(true);
     AsyncStorage.removeItem('userInfo');
+    AsyncStorage.removeItem('statusInfo');
+    AsyncStorage.removeItem('ClaimsInfo');
     setUserInfo({});
+    setStatusInfo({});
+    setClaimsInfo({});
     setResponseMessage('');
+    setIsLogin(false)
     setIsLoading(false);
-
-    // axios
-    //   .post(
-    //     `${BASE_URL}/logout`,
-    //     {},
-    //     {
-    //       headers: {Authorization: `Bearer ${userInfo.access_token}`},
-    //     },
-    //   )
-    //   .then(res => {
-    //     console.log(res.data);
-    //     AsyncStorage.removeItem('userInfo');
-    //     setUserInfo({});
-    //     setIsLoading(false);
-    //   })
-    //   .catch(e => {
-    //     console.log(`logout error ${e}`);
-    //     setIsLoading(false);
-    //   });
   };
 
   const isLoggedIn = async () => {
@@ -121,6 +110,7 @@ export const AuthProvider = ({ children }) => {
       setSplashLoading(false);
     } catch (e) {
       setSplashLoading(false);
+      logout();
       console.log(`is logged in error ${e}`);
     }
   };
@@ -138,8 +128,10 @@ export const AuthProvider = ({ children }) => {
         splashLoading,
         login,
         getClaimStatus,
+        getClaimList,
         logout,
         statusInfo,
+        claimsInfo,
       }}>
       {children}
     </AuthContext.Provider>
