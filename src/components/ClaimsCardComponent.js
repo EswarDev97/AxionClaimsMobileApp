@@ -3,24 +3,10 @@ import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native
 
 const numColumns = 1;
 
-
-// const renderItem = ({ item }) => (
-//     <View style={styles.item}>
-//         <View style={styles.card}>
-//             {/* <Text style={styles.cname}></Text>
-//             <Text style={styles.title}>Report No</Text>
-//             <Text style={styles.status}>{item.reportNo}</Text> */}
-//             <Text style={styles.title}>Report No :{item.reportNo}</Text>
-//             <Text style={styles.title}>Calim Number :{item.claimNumber}</Text>
-//             <Text style={styles.title}>Vehical/Registration Number :{item.registrationNo}</Text>
-//             <Text style={styles.title}>Company Name :{item.companyName}</Text>
-//             <Text style={styles.link}>Full Details...</Text>
-//         </View>
-//     </View>
-// );
-
 const Item = ({ item, navigateToScreen }) => {
-    console.log('item', item);
+
+    let Uuid = item.claimsurveyUuid;
+    let Rno = item.reportNo;
     let id = item.id;
     return (
         <View style={styles.item}>
@@ -29,7 +15,7 @@ const Item = ({ item, navigateToScreen }) => {
                 <Text style={styles.title}>Calim Number :{item.claimNumber}</Text>
                 <Text style={styles.title}>Vehical/Registration Number :{item.registrationNo}</Text>
                 <Text style={styles.title}>Company Name :{item.companyName}</Text>
-                <TouchableOpacity onPress={() => navigateToScreen('Claimdetails', { id })}>
+                <TouchableOpacity onPress={() => navigateToScreen('Claimdetails', { Uuid, Rno, id })}>
                     <Text style={styles.link}>Full Details</Text>
                 </TouchableOpacity>
             </View>
@@ -40,7 +26,7 @@ const ClaimsCardComponent = ({ claimsData, navigation }) => {
     const navigateToScreen = (screenName, params) => {
         navigation.navigate(screenName, params);
     };
-    console.log('claimsData Card', claimsData);
+    // console.log('claimsData Card', claimsData);
     return (
         <React.Fragment>
             <View style={styles.container}>
@@ -71,7 +57,7 @@ const styles = StyleSheet.create({
         padding: 10,
     },
     card: {
-        backgroundColor: '#215190',
+        backgroundColor: '#fff',
         borderRadius: 8,
         margin: 8,
         padding: 16,
@@ -87,11 +73,11 @@ const styles = StyleSheet.create({
     title: {
         padding: 3,
         fontSize: 16,
-        color: '#fff',
-        fontWeight: 'normal'
+        color: '#000',
+        fontWeight: 'bold'
     },
     link: {
-        color: '#000',
+        color: 'blue',
         marginLeft: '73%',
     },
 });

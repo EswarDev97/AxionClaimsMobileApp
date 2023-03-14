@@ -12,7 +12,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import { AuthContext } from '../context/AuthContext';
 import DeviceInfo from "react-native-device-info";
 
-const backgroundImage = require('../assets/images/background_car.jpg');
+const backgroundImage = require('../assets/images/background_login.png');
 
 const LoginScreen = ({ navigation }) => {
     const [email, setEmail] = useState(null);
@@ -33,7 +33,7 @@ const LoginScreen = ({ navigation }) => {
         <ImageBackground source={backgroundImage} style={styles.background}>
         <View style={styles.container}>
             <Image  source={require('./../assets/images/axion_logo.png')} style={{width: 144, height: 144, position: 'relative', marginTop: '10%'}} />  
-            <Text style={{fontSize: 25, fontWeight: 'bold', color: '#000', marginBottom: 25}}>AXION CLAIMS</Text>
+            <Text style={{fontSize: 25, fontWeight: 'bold', color: '#fff', marginBottom: 15, marginTop: 10}}>AXION CLAIMS</Text>
             {/* <Text>{DeviceInfo.getSystemVersion()}</Text> */}
             <Spinner visible={isLoading} />
             <View style={styles.wrapper}>
@@ -80,14 +80,13 @@ const styles = StyleSheet.create({
     },
     wrapper: {
         width: '80%',
-        marginTop: '5%',
+        marginTop: '3%',
         marginBottom: '5%',
     },
     input: {
-        opacity: .7,
         backgroundColor: '#fff',
         marginBottom: 12,
-        marginTop: '3%',
+        marginTop: '2%',
         borderWidth: 1,
         borderColor: '#bbb',
         borderRadius: 5,
@@ -116,7 +115,7 @@ const styles = StyleSheet.create({
         marginTop: '25%',
     },
     label: {
-        color: '#000',
+        color: '#fff',
         fontWeight: 'bold',
     }
 });

@@ -10,14 +10,15 @@ const LogoutButton = () => {
         position: 'absolute',
         bottom: 0,
         width: '100%',
-        backgroundColor: 'red',
+        backgroundColor: '#d2d2d4',
         alignItems: 'center',
         justifyContent: 'center',
         padding: 10,
+        borderRadius: 10,
       }}
       onPress={logout}
     >
-      <Text style={{ color: 'white', fontSize: 16 }}>LOGOUT</Text>
+      <Text style={{ color: '#000', fontSize: 16 }}>LOGOUT</Text>
     </TouchableOpacity>
   );
 };

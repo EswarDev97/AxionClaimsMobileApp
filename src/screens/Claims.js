@@ -8,7 +8,7 @@ import { BASE_URL } from '../config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LogoutButton from '../components/LogoutButton';
 
-const backgroundImage = require('../assets/images/background_pattern1.png');
+const backgroundImage = require('../assets/images/background_screen.jpeg');
 
 const Claims = ({ navigation }) => {
 
@@ -28,14 +28,15 @@ const Claims = ({ navigation }) => {
       });
     AsyncStorage.setItem('ClaimsInfo', JSON.stringify(result.data));
     setClaimData(result.data);
+    // console.log('result claims', result.data);
   };
 
   return (
     <ImageBackground source={backgroundImage} style={styles.background}>
       <View style={styles.container}>
         <ClaimsCardComponent claimsData={Object.keys(claimData).length != 0 ? claimData.data : null} navigation={navigation} />
-        <LogoutButton />
       </View>
+        <LogoutButton />
     </ImageBackground>
   )
 }
@@ -53,6 +54,7 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     marginRight: 15,
+    marginBottom: '10%',
   },
   wrapper: {
     width: '80%',

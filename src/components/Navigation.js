@@ -11,8 +11,10 @@ import { AuthContext } from '../context/AuthContext';
 import SplashScreen from '../screens/SplashScreen';
 import Claims from '../screens/Claims';
 import SideMenuScreen from './SideMenuScreen';
-import Icon from 'react-native-vector-icons/Ionicons';
 import ClaimDetalisScreen from '../screens/ClaimDetalisScreen';
+import UploadDocumentsScreen from '../screens/UploadDocumentsScreen';
+import TakePhotos from '../screens/TakePhotosScreen';
+import RecordVideo from '../screens/RecordVideoScreen';
 
 
 const Drawer = createDrawerNavigator();
@@ -50,6 +52,21 @@ const Navigation = () => {
             <Stack.Screen
               name="Claimdetails"
               component={ClaimDetalisScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="RecordVideo"
+              component={RecordVideo}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="TakePhotos"
+              component={TakePhotos}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="UploadDocuments"
+              component={UploadDocumentsScreen}
               options={{ headerShown: false }}
             />
           </React.Fragment>

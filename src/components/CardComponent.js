@@ -1,9 +1,12 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
-const CardComponent = ({ title, status, navigation, path }) => {
+const CardComponent = ({ title, status, navigation, path, data }) => {
+  const navigateToScreen = (screenName, params) => {
+    navigation.navigate(screenName, params);
+};
   return (
-    <TouchableOpacity style={{width: '90%'}} onPress={() => navigation.navigate(path)}>
+    <TouchableOpacity style={{width: '90%'}} onPress={() => navigateToScreen(path, { data })}>
       <View style={styles.card}>
         <Text style={styles.title}>{title}</Text>
         {status != null ? (<Text style={styles.status}>{status}</Text>) : ''}

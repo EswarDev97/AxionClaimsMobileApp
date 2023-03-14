@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Button, StyleSheet, ImageBackground, TouchableOpacity, Text, View } from 'react-native';
+import { Button, StyleSheet, ImageBackground, TouchableOpacity, Text, View, ScrollView, RefreshControl } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import CardComponent from '../components/CardComponent';
 import { AuthContext } from '../context/AuthContext';
@@ -8,24 +8,33 @@ import { BASE_URL } from '../config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LogoutButton from '../components/LogoutButton';
 
-const backgroundImage = require('../assets/images/background_pattern1.png');
+const backgroundImage = require('../assets/images/background_screen.jpeg');
 
 const HomeScreen = ({ navigation }) => {
   const { userInfo, getClaimStatus, isLoading, logout } = useContext(AuthContext);
   const [statusInfo, setStatusInfo] = useState(null);
   const [claimStatus, setClaimStatus] = useState(null);
 
-  useEffect(() => {
-    let mobile = userInfo.data.res.mobile;
-    const fetchData = async () => {
-      const result = await axios
-        .post(`${BASE_URL}/get-claim-status`, {
-          mobile
-        });
-      AsyncStorage.setItem('statusInfo', JSON.stringify(result.data.data[0].status));
-      setStatusInfo(result.data.data[0].status);
-    };
+  const [refreshing, setRefreshing] = useState(false);
 
+  const onRefresh = () => {
+    setRefreshing(true);
+    fetchData();
+    // perform any necessary data fetching or refreshing operations
+    setRefreshing(false);
+  };
+
+  const fetchData = async () => {
+    let mobile = userInfo.data.res.mobile;
+    const result = await axios
+      .post(`${BASE_URL}/get-claim-status`, {
+        mobile
+      });
+    AsyncStorage.setItem('statusInfo', JSON.stringify(result.data.data[0].status));
+    setStatusInfo(result.data.data[0].status);
+  };
+
+  useEffect(() => {
     fetchData();
   }, []);
 
@@ -48,17 +57,23 @@ const HomeScreen = ({ navigation }) => {
 
   return (
     <ImageBackground source={backgroundImage} style={styles.background}>
-      <View style={styles.container}>
-        <Spinner visible={isLoading} />
-        <CardComponent navigation={navigation} title='ACTIVE CLAIM STATUS' path='' status={claimStatus != null ? claimStatus : 'No Active Claims'} />
-        <CardComponent navigation={navigation} title='Your Claims' path='Claims' status={null}/>
-        {
-          userInfo.userType == 'Customer' ?
-          <CardComponent navigation={navigation} title='Give Consent' path='Giveconsent' status={null} />
-          : ''
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
-      </View>
-      <LogoutButton/>
+      >
+        <View style={styles.container}>
+          <Spinner visible={isLoading} />
+          <CardComponent navigation={navigation} title='ACTIVE CLAIM STATUS' path='Dashboard' status={claimStatus != null ? claimStatus : 'No Active Claims'} data='' />
+          <CardComponent navigation={navigation} title='Your Claims' path='Claims' status={null} data='' />
+          {
+            userInfo.userType == 'Customer' ?
+              <CardComponent navigation={navigation} title='Give Consent' path='Giveconsent' status={null} data='' />
+              : ''
+          }
+        </View>
+      </ScrollView>
+        <LogoutButton />
     </ImageBackground>
   );
 };
@@ -73,6 +88,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    marginTop: '40%',
   },
   welcome: {
     fontSize: 18,

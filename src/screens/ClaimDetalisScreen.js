@@ -1,14 +1,32 @@
 import React, { useState } from 'react'
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native'
+import { StyleSheet, View, Text, ImageBackground, TouchableOpacity, ScrollView, RefreshControl, Button, Alert, Linking } from 'react-native'
 import LogoutButton from '../components/LogoutButton';
+import CardComponent from '../components/CardComponent';
 
-export default function ClaimDetalisScreen({ route }) {
-    const { id } = route.params;
-    console.log('details', id)
+const backgroundImage = require('../assets/images/background_screen.jpeg');
+
+export default function ClaimDetalisScreen({ route, navigation }) {
+    const { Uuid, Rno, id } = route.params;
+    // console.log('Uuid', Uuid)
+    // console.log('Rno', Rno)
+
+    let Obj = {
+        uuid: Uuid,
+        reportNo: Rno,
+        id: id,
+    }
 
     const [documents, setDocumnetsExpanded] = useState(false);
     const [video, setVideoExpanded] = useState(false);
     const [photos, setPhotosExpanded] = useState(false);
+
+    const [refreshing, setRefreshing] = useState(false);
+
+    const onRefresh = () => {
+        setRefreshing(true);
+        // perform any necessary data fetching or refreshing operations
+        setRefreshing(false);
+    };
 
     const DocumentsExpanded = () => {
         setDocumnetsExpanded(!documents);
@@ -23,72 +41,34 @@ export default function ClaimDetalisScreen({ route }) {
     };
     return (
         <React.Fragment>
-            <View style={styles.container}>
-
-                <View style={styles.card}>
-                    <TouchableOpacity onPress={DocumentsExpanded}>
-                        <Text style={styles.title}>Documents Upload</Text>
-                    </TouchableOpacity>
-                    {documents && (
-                        <View style={styles.dataContainer}>
-                            <Text>You can Upload your documents here</Text>
-                        </View>
-                    )}
-                </View>
-
-                <View style={styles.card}>
-                    <TouchableOpacity onPress={VideoExpanded}>
-                        <Text style={styles.title}>Offline Video</Text>
-                    </TouchableOpacity>
-                    {video && (
-                        <View style={styles.dataContainer}>
-                            <Text>You can Upload your Offline Video here</Text>
-                        </View>
-                    )}
-                </View>
-                <View style={styles.card}>
-                    <TouchableOpacity onPress={PhotosExpanded}>
-                        <Text style={styles.title}>Take Photos</Text>
-                    </TouchableOpacity>
-                    {photos && (
-                        <View style={styles.dataContainer}>
-                            <Text>You can Upload your Photos here</Text>
-                        </View>
-                    )}
-                </View>
-            </View>
+            <ImageBackground source={backgroundImage} style={styles.background}>
+                <ScrollView
+                    refreshControl={
+                        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                    }
+                >
+                    <View style={styles.container}>
+                        <CardComponent navigation={navigation} title='Record Video' path='RecordVideo' status={null} data={Obj} />
+                        <CardComponent navigation={navigation} title='Take Photos' path='TakePhotos' status={null} data={Obj} />
+                        <CardComponent navigation={navigation} title='Upload Documents' path='UploadDocuments' status={null} data={Obj} />
+                    </View>
+                </ScrollView>
+            </ImageBackground>
             <LogoutButton />
         </React.Fragment>
     )
 }
 
 const styles = StyleSheet.create({
-    container: {
-        marginTop: 10,
+    background: {
         flex: 1,
-        width: '100%',
-        marginRight: 15,
+        resizeMode: "cover",
     },
-    card: {
-        width: '80%',
-        backgroundColor: '#215190',
-        padding: 10,
-        borderRadius: 5,
-        elevation: 2,
-        marginBottom: 10,
-        marginLeft: '9%',
-    },
-    title: {
-        color: '#fff',
-        fontSize: 18,
-        fontWeight: 'bold',
-        marginBottom: 10,
-    },
-    dataContainer: {
-        marginTop: 10,
-    },
-    dataItem: {
-        fontSize: 16,
-        marginBottom: 5,
+    container: {
+        bottom: 0,
+        top: 0,
+        flex: 1,
+        alignItems: 'center',
+        marginTop: '40%',
     },
 });
