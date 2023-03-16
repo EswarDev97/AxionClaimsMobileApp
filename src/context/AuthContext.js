@@ -88,6 +88,7 @@ export const AuthProvider = ({ children }) => {
     AsyncStorage.removeItem('userInfo');
     AsyncStorage.removeItem('statusInfo');
     AsyncStorage.removeItem('ClaimsInfo');
+    AsyncStorage.removeItem('SessionLinkInfo');
     setUserInfo({});
     setStatusInfo({});
     setClaimsInfo({});

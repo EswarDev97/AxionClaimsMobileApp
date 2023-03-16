@@ -5,11 +5,13 @@ const UploadButton = ({ title, onPress }) => {
   return (
     <TouchableOpacity
     style={{
-      width: '40%',
+      alignItems: 'center',
+      textAlign: 'center',
+      width: '60%',
       backgroundColor: '#0B64B1',
-      padding: '3%',
+      padding: '5%',
       marginRight: 10,
-      marginBottom: 5,
+      marginBottom: 30,
       borderRadius: 10,
     }}
     onPress={onPress}

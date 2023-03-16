@@ -1,15 +1,19 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Linking } from 'react-native';
 
 const CardComponent = ({ title, status, navigation, path, data }) => {
   const navigateToScreen = (screenName, params) => {
+    if(status === 'openWeb')
+    {
+      Linking.openURL(path);
+    }
     navigation.navigate(screenName, params);
 };
   return (
     <TouchableOpacity style={{width: '90%'}} onPress={() => navigateToScreen(path, { data })}>
       <View style={styles.card}>
         <Text style={styles.title}>{title}</Text>
-        {status != null ? (<Text style={styles.status}>{status}</Text>) : ''}
+        {status != null && status != 'openWeb'? (<Text style={styles.status}>{status}</Text>) : ''}
       </View>
     </TouchableOpacity>
   );

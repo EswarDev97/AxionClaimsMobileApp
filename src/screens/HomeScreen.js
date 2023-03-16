@@ -25,31 +25,36 @@ const HomeScreen = ({ navigation }) => {
   };
 
   const fetchData = async () => {
+    let role = userInfo.userType[0];
     let mobile = userInfo.data.res.mobile;
     const result = await axios
       .post(`${BASE_URL}/get-claim-status`, {
-        mobile
+        mobile,
+        role
       });
-    AsyncStorage.setItem('statusInfo', JSON.stringify(result.data.data[0].status));
-    setStatusInfo(result.data.data[0].status);
+    AsyncStorage.setItem('statusInfo', JSON.stringify(result.data.data));
+    setStatusInfo(result.data.data);
+    // console.log('home claim status', result.data.data);
   };
+
+  // console.log("home", userInfo);
 
   useEffect(() => {
     fetchData();
   }, []);
 
   useEffect(() => {
-    if (statusInfo != null) {
-      console.log('statusInfo', statusInfo);
-      const result = StatusObj.filter(obj => obj.ref === statusInfo);
+    if (statusInfo != null && statusInfo != 0) {
+      const result = StatusObj.filter(obj => obj.ref == statusInfo.status);
       setClaimStatus(result[0].val);
-      console.log(result[0].val);
+      // console.log(result[0].val);
     }
   }, [statusInfo])
 
   const StatusObj = [
+    { ref: 0, val: 'Fresh' },
     { ref: 8, val: 'Spot Survey' },
-    { ref: 101, val: 'Final-Survey' },
+    { ref: 101, val: 'Completed' },
     { ref: 102, val: 'Re-Inspection' },
     { ref: 104, val: 'Initial-Survey' },
     { ref: 9, val: 'Cancelled' }
@@ -64,7 +69,7 @@ const HomeScreen = ({ navigation }) => {
       >
         <View style={styles.container}>
           <Spinner visible={isLoading} />
-          <CardComponent navigation={navigation} title='ACTIVE CLAIM STATUS' path='Dashboard' status={claimStatus != null ? claimStatus : 'No Active Claims'} data='' />
+          <CardComponent navigation={navigation} title='ACTIVE CLAIM STATUS' path='Dashboard' status={claimStatus != null ? claimStatus : 'FNOL Received'} data='' />
           <CardComponent navigation={navigation} title='Your Claims' path='Claims' status={null} data='' />
           {
             userInfo.userType == 'Customer' ?

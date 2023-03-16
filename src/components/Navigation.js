@@ -15,6 +15,8 @@ import ClaimDetalisScreen from '../screens/ClaimDetalisScreen';
 import UploadDocumentsScreen from '../screens/UploadDocumentsScreen';
 import TakePhotos from '../screens/TakePhotosScreen';
 import RecordVideo from '../screens/RecordVideoScreen';
+import WebScreen from '../screens/WebScreen';
+import GiveconsentScreen from '../screens/GiveconsentScreen';
 
 
 const Drawer = createDrawerNavigator();
@@ -46,7 +48,7 @@ const Navigation = () => {
             />
             <Stack.Screen
               name="Giveconsent"
-              component={Claims}
+              component={GiveconsentScreen}
               options={{ headerShown: false }}
             />
             <Stack.Screen
@@ -67,6 +69,11 @@ const Navigation = () => {
             <Stack.Screen
               name="UploadDocuments"
               component={UploadDocumentsScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="WebPage"
+              component={WebScreen}
               options={{ headerShown: false }}
             />
           </React.Fragment>

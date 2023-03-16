@@ -11,10 +11,22 @@ const Item = ({ item, navigateToScreen }) => {
     return (
         <View style={styles.item}>
             <View style={styles.card}>
-                <Text style={styles.title}>Report No :{item.reportNo}</Text>
-                <Text style={styles.title}>Calim Number :{item.claimNumber}</Text>
-                <Text style={styles.title}>Vehical/Registration Number :{item.registrationNo}</Text>
-                <Text style={styles.title}>Company Name :{item.companyName}</Text>
+                <View style={styles.titleContainer}>
+                    <Text style={styles.label}>Report No:</Text>
+                    <Text style={styles.title}>{item.reportNo}</Text>
+                </View>
+                <View style={styles.titleContainer}>
+                    <Text style={styles.label}>Calim Number:</Text>
+                    <Text style={styles.title}>{item.claimNumber}</Text>
+                </View>
+                <View style={styles.titleContainer}>
+                    <Text style={styles.label}>Vehical/Registration Number:</Text>
+                    <Text style={styles.title}>{item.registrationNo}</Text>
+                </View>
+                <View style={styles.titleContainer}>
+                    <Text style={styles.label}>Company Name:</Text>
+                    <Text style={styles.title}>{item.companyName}</Text>
+                </View>
                 <TouchableOpacity onPress={() => navigateToScreen('Claimdetails', { Uuid, Rno, id })}>
                     <Text style={styles.link}>Full Details</Text>
                 </TouchableOpacity>
@@ -60,7 +72,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         borderRadius: 8,
         margin: 8,
-        padding: 16,
+        padding: 12,
         shadowColor: '#000',
         shadowOffset: {
             width: 0,
@@ -70,15 +82,25 @@ const styles = StyleSheet.create({
         shadowRadius: 3.84,
         elevation: 5,
     },
-    title: {
-        padding: 3,
+    titleContainer: {
+        flexDirection: 'row',
+        marginBottom: 10,
+    },
+    label: {
         fontSize: 16,
+        fontWeight: 'bold',
+        marginRight: 10,
+    },
+    title: {
+        fontSize: 15,
         color: '#000',
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        width: '60%',
     },
     link: {
+        fontSize: 16,
         color: 'blue',
-        marginLeft: '73%',
+        marginLeft: '70%',
     },
 });
 

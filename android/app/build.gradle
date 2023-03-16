@@ -95,7 +95,7 @@ android {
 
     namespace "com.rnauth"
     defaultConfig {
-        applicationId "com.axionclaims"
+        applicationId "com.axionpcs.apps.claims"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

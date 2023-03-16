@@ -84,7 +84,7 @@ function DocumentComponent({ title, data, refresh }) {
   };
 
   const deleteDocument = async (Obj) => {
-    console.log('delete', Obj);
+    // console.log('delete', Obj);
     let referenceNo = Obj.reportNo;
     let file_name = Obj.file_name;
     let id = Obj.id;
@@ -155,9 +155,8 @@ function DocumentComponent({ title, data, refresh }) {
   };
 
   return (
-    <View>
+      <View style={styles.card}>
       <Text style={styles.title}>{title}</Text>
-      <View>
 
 
         <View style={{ flexDirection: 'row' }}>
@@ -174,23 +173,38 @@ function DocumentComponent({ title, data, refresh }) {
               typeImage ?
                 <Image
                   source={{ uri: selectedImage }}
-                  style={{ width: 200, height: 100, marginBottom: 10, }}
+                  style={{ width: 350, height: 250, marginBottom: 10, }}
                 /> : ''
               // <WebView source={{ uri: selectedImage }}
               // style={{ width: 200, height: 100, marginBottom: 10, }} />
             }
           </View>
         )}
-      </View>
       {/* <Button title="Upload Document" onPress={handleImagePicker} /> */}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  card: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    textAlign: 'center',
+    backgroundColor: '#ebebeb',
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    elevation: 5,
+    marginBottom: 20,
+    width: "90%",
+  },
   title: {
-    color: '#fff',
-    fontSize: 16,
+    marginTop: 10,
+    color: '#000',
+    fontSize: 20,
     fontWeight: 'normal',
     marginBottom: 20,
   },
