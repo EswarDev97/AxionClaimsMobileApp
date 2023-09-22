@@ -26,11 +26,13 @@ const Claims = ({ navigation }) => {
   let mobile = userInfo.data.res.mobile;
   // console.log('userInfo.data', userType);
 
+  let claminNo = userInfo.data.res.firstName;
   const fetchData = async () => {
     const result = await axios
       .post(`${BASE_URL}/get-claims-list`, {
         mobile,
-        role
+        role,
+        claminNo,
       });
     AsyncStorage.setItem('ClaimsInfo', JSON.stringify(result.data));
     setClaimData(result.data);

@@ -11,59 +11,81 @@ import {
 import Spinner from 'react-native-loading-spinner-overlay';
 import { AuthContext } from '../context/AuthContext';
 import DeviceInfo from "react-native-device-info";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const backgroundImage = require('../assets/images/background_login.png');
 
 const LoginScreen = ({ navigation }) => {
-    const [email, setEmail] = useState(null);
-    const [password, setPassword] = useState(null);
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const [errMsg, setErrMsg] = useState(false);
 
     const { isLoading, login, responseMessage, userInfo } = useContext(AuthContext);
+
     useEffect(() => {
-      if(Object.keys(userInfo).length != 0)
-      {
-        if(userInfo.code == 401){ setErrMsg(true);}
-        else{ setErrMsg(false); }
-      }
-    }, [userInfo])
-    
+        // Load saved email and password when the login screen loads
+        AsyncStorage.getItem('savedEmail').then((savedEmail) => {
+            if (savedEmail) {
+                setEmail(savedEmail);
+            }
+        });
+        AsyncStorage.getItem('savedPassword').then((savedPassword) => {
+            if (savedPassword) {
+                setPassword(savedPassword);
+            }
+        });
+
+        if (Object.keys(userInfo).length !== 0) {
+            if (userInfo.code === 401) {
+                setErrMsg(true);
+            } else {
+                setErrMsg(false);
+            }
+        }
+    }, [userInfo]);
+
+    const handleLogin = () => {
+        if (email && password) {
+            login(email, password);
+
+            // Save the email and password for next time
+            AsyncStorage.setItem('savedEmail', email);
+            AsyncStorage.setItem('savedPassword', password);
+        }
+    };
 
     return (
         <ImageBackground source={backgroundImage} style={styles.background}>
-        <View style={styles.container}>
-            <Image  source={require('./../assets/images/axion_logo.png')} style={{width: 144, height: 144, position: 'relative', marginTop: '10%'}} />  
-            <Text style={{fontSize: 25, fontWeight: 'bold', color: '#fff', marginBottom: 15, marginTop: 10}}>AXION CLAIMS</Text>
-            {/* <Text>{DeviceInfo.getSystemVersion()}</Text> */}
-            <Spinner visible={isLoading} />
-            <View style={styles.wrapper}>
-                <Text style={styles.label}>Email:</Text>
-                <TextInput
-                    style={styles.input}
-                    value={email}
-                    placeholder="Enter email"
-                    onChangeText={text => setEmail(text)}
-                />
-                <Text style={styles.label}>Password:</Text>
-                <TextInput
-                    style={styles.input}
-                    value={password}
-                    placeholder="Enter password"
-                    onChangeText={text => setPassword(text)}
-                    secureTextEntry
-                />
-            </View>
+            <View style={styles.container}>
+                <Image source={require('./../assets/images/axion_logo.png')} style={{ width: 144, height: 144, position: 'relative', marginTop: '10%' }} />
+                <Text style={{ fontSize: 25, fontWeight: 'bold', color: '#fff', marginBottom: 15, marginTop: 10 }}>AXION CLAIMS</Text>
+                <Spinner visible={isLoading} />
+                <View style={styles.wrapper}>
+                    <Text style={styles.label}>Email:</Text>
+                    <TextInput
+                        style={styles.input}
+                        value={email}
+                        placeholder="Enter email"
+                        onChangeText={text => setEmail(text)}
+                    />
+                    <Text style={styles.label}>Password:</Text>
+                    <TextInput
+                        style={styles.input}
+                        value={password}
+                        placeholder="Enter password"
+                        onChangeText={text => setPassword(text)}
+                        secureTextEntry
+                    />
+                </View>
                 <Button
                     title="Login"
-                    onPress={() => {
-                        login(email, password);
-                    }}
+                    onPress={handleLogin}
                     style={styles.button}
                     color="#0B64B1"
                 />
                 {errMsg ? <Text style={styles.errorText}>Credentials Wrong</Text> : ''}
                 <Text style={styles.text}>AXION CALIMS - A Seamless Automobile Insurance Claim Processing Solution</Text>
-        </View>
+            </View>
         </ImageBackground>
     );
 };
